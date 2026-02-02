@@ -1,0 +1,21 @@
+{
+  "name": "avatar_bot",
+  "version": "1.0.0",
+  "description": "Telegramm bot Avalik Avatar",
+  "main": "src/server.ts",
+  "author": "Webstroke (ВебШтрих) ",
+  "license": "MIT",
+  "scripts": {
+    "dev": "ts-node src/server.ts",
+    "start": "node dist/server.js",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@types/node": "^25.1.0",
+    "dotenv": "^17.2.3",
+    "pdfkit": "^0.15.0",
+    "telegraf": "^4.16.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
