@@ -36,13 +36,10 @@ export function calculateAvatarData(
 
   const A = reduceToAvatarNumber(dayNum)
   const B = reduceToAvatarNumber(monthNum)
-  const V = reduceToAvatarNumber(
-    String(yearNum)
-      .split('')
-      .reduce((sum, digit) => sum + parseInt(digit, 10), 0)
-  )
+  const V = reduceToAvatarNumber(yearNum.toString().split('').reduce((sum, digit) => sum + parseInt(digit), 0));
   const G = reduceToAvatarNumber(A + B + V)
   const D = reduceToAvatarNumber(A + B + V + G)
+
 
   const date = {
     'A': {

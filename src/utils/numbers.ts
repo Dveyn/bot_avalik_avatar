@@ -19,10 +19,9 @@ export function reduceToSingleDigit(n: number): number {
  *  - 123 → 1+2+3 = 6
  *  - 999 → 9+9+9 = 27 → 2+7 = 9
  */
-export function reduceToAvatarNumber(n: number): number {
-  if (n === 0) return 0
-  const sum = String(n)
-    .split('')
-    .reduce((acc, d) => acc + parseInt(d, 10), 0)
-  return sum <= 22 ? sum : reduceToAvatarNumber(sum)
+export function reduceToAvatarNumber(number: number): number {
+  while (number > 22) {
+    number = number.toString().split('').reduce((sum, digit) => sum + parseInt(digit), 0);
+}
+return number;
 }
