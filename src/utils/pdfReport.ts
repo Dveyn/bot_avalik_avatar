@@ -78,6 +78,8 @@ function addSection(doc: Doc, title: string,
     align: 'left',
     lineGap: 1,
   })
+  doc.moveDown(0.5)
+
   doc
   .fontSize(fontSize)
   .font(getFont(doc))
@@ -85,8 +87,10 @@ function addSection(doc: Doc, title: string,
     align: 'left',
     lineGap: 1,
   })
+  doc.moveDown(0.3)
   if (img.avatarImagesDir && img.linkImg) {
     addAvatarImageIfExists(doc as Doc, img.avatarImagesDir, img.linkImg);
+    doc.moveDown(0.3)
   }
   doc
     .fontSize(fontSize)
