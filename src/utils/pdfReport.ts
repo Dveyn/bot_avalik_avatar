@@ -12,6 +12,9 @@ import {
   LESSONS_TEXTS,
   CHARACTER_BLOCK_INTRO,
   COMFORT_BLOCK_INTRO,
+  MONEY_BLOCK_INTRO,
+  TALENTS_BLOCK_INTRO,
+  LESSONS_BLOCK_INTRO,
 } from './avatarData'
 
 /** Путь к шрифту для кириллицы: .env FONT_PATH или public/Manrope.ttf */
@@ -179,9 +182,9 @@ export function buildAvatarPdfBuffer(input: PdfReportInput): Promise<Buffer> {
       const sections = [
         { title: 'Характер', point: { data: result.date['A'], key: 'A', intro: CHARACTER_BLOCK_INTRO, recommendations: result.date['A'].recommendations } },
         result.date['D'] ? { title: 'Зона комфорта', point: { data: result.date['D'], key: 'D', intro: COMFORT_BLOCK_INTRO, recommendations: result.date['D'].recommendations } } : null,
-        result.date['B'] ? { title: 'Таланты', point: { data:  result.date['B'] , key: 'B', intro: TALENTS_TEXTS[result.B] ?? '—', recommendations:  result.date['B'] .recommendations } } : null,
-        result.date['V']  ? { title: 'Деньги', point: { data:  result.date['V'], key: 'V', intro: MONEY_TEXTS[result.V] ?? '—', recommendations:  result.date['V'].recommendations } } : null,
-        result.date['G'] ? { title: 'Уроки в падении', point: { data: result.date['G'], key: 'G', intro: LESSONS_TEXTS[result.G] ?? '—', recommendations: result.date['G'].recommendations } } : null,
+        result.date['B'] ? { title: 'Таланты', point: { data:  result.date['B'] , key: 'B', intro: TALENTS_BLOCK_INTRO ?? '—', recommendations:  result.date['B'] .recommendations } } : null,
+        result.date['V']  ? { title: 'Деньги', point: { data:  result.date['V'], key: 'V', intro: MONEY_BLOCK_INTRO ?? '—', recommendations:  result.date['V'].recommendations } } : null,
+        result.date['G'] ? { title: 'Уроки в падении', point: { data: result.date['G'], key: 'G', intro: LESSONS_BLOCK_INTRO ?? '—', recommendations: result.date['G'].recommendations } } : null,
       ].filter(Boolean);
 
       sections.forEach((sectionObj) => {
