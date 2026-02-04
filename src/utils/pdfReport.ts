@@ -63,38 +63,38 @@ function getFontBold(doc: Doc): string {
   return 'Helvetica-Bold'
 }
 
-function addSection(doc: Doc, title: string, 
+function addSection(doc: Doc, title: string,
   intro: string,
   titleAvatar: string,
-  body: string | string[], 
-  opts: { fontSize?: number; margin?: number; titleFontSize?: number } = {}, 
-  img: {avatarImagesDir:string | undefined, linkImg:string | undefined}) {
+  body: string | string[],
+  opts: { fontSize?: number; margin?: number; titleFontSize?: number } = {},
+  img: { avatarImagesDir: string | undefined, linkImg: string | undefined }) {
   const fontSize = opts.fontSize ?? 10
   const margin = opts.margin ?? 6
   const titleFontSize = opts.titleFontSize ?? 14
 
 
-  doc.moveDown(0.5) 
+  doc.moveDown(0.5)
   doc.fontSize(titleFontSize).font(getFontBold(doc)).text(title)
   doc.moveDown(0.3)
 
   const text = Array.isArray(body) ? body.join('\n') : body
   doc
-  .fontSize(fontSize)
-  .font(getFont(doc))
-  .text(intro, {
-    align: 'left',
-    lineGap: 1,
-  })
+    .fontSize(fontSize)
+    .font(getFont(doc))
+    .text(intro, {
+      align: 'left',
+      lineGap: 1,
+    })
   doc.moveDown(0.5)
 
   doc
-  .fontSize(12)
-  .font(getFontBold(doc))
-  .text(titleAvatar, {
-    align: 'left',
-    lineGap: 1,
-  })
+    .fontSize(12)
+    .font(getFontBold(doc))
+    .text(titleAvatar, {
+      align: 'left',
+      lineGap: 1,
+    })
 
 
   doc.moveDown(0.3)
@@ -197,8 +197,8 @@ export function buildAvatarPdfBuffer(input: PdfReportInput): Promise<Buffer> {
       const sections = [
         { title: 'Характер', point: { data: result.date['A'], key: 'A', intro: CHARACTER_BLOCK_INTRO, recommendations: result.date['A'].recommendations } },
         result.date['D'] ? { title: 'Зона комфорта', point: { data: result.date['D'], key: 'D', intro: COMFORT_BLOCK_INTRO, recommendations: result.date['D'].recommendations } } : null,
-        result.date['B'] ? { title: 'Таланты', point: { data:  result.date['B'] , key: 'B', intro: TALENTS_BLOCK_INTRO ?? '—', recommendations:  result.date['B'] .recommendations } } : null,
-        result.date['V']  ? { title: 'Деньги', point: { data:  result.date['V'], key: 'V', intro: MONEY_BLOCK_INTRO ?? '—', recommendations:  result.date['V'].recommendations } } : null,
+        result.date['B'] ? { title: 'Таланты', point: { data: result.date['B'], key: 'B', intro: TALENTS_BLOCK_INTRO ?? '—', recommendations: result.date['B'].recommendations } } : null,
+        result.date['V'] ? { title: 'Деньги', point: { data: result.date['V'], key: 'V', intro: MONEY_BLOCK_INTRO ?? '—', recommendations: result.date['V'].recommendations } } : null,
         result.date['G'] ? { title: 'Уроки в падении', point: { data: result.date['G'], key: 'G', intro: LESSONS_BLOCK_INTRO ?? '—', recommendations: result.date['G'].recommendations } } : null,
       ].filter(Boolean);
 
@@ -208,15 +208,15 @@ export function buildAvatarPdfBuffer(input: PdfReportInput): Promise<Buffer> {
         const linkImg = point.data.image;
         const titleAvatar = point!.data.title;
         const intro = point!.intro[gender];
-        addSection(doc as Doc, 
-          title, 
+        addSection(doc as Doc,
+          title,
           intro,
           titleAvatar,
           [
-          '',
-          '',
-          point!.data.description ?? '',
-        ], { margin: 10 }, {avatarImagesDir, linkImg});
+            '',
+            '',
+            point!.data.description ?? '',
+          ], { margin: 10 }, { avatarImagesDir, linkImg });
 
         if (point!.recommendations?.length) {
           doc.fontSize(11).font(fontBold).text(`Рекомендации по ${title.toLowerCase()}`, { continued: false });
@@ -224,6 +224,37 @@ export function buildAvatarPdfBuffer(input: PdfReportInput): Promise<Buffer> {
           addBullets(doc as Doc, point!.recommendations, 10);
         }
       });
+
+
+      doc.text(`
+        ВАЖНО ЗНАТЬ
+
+Этот бот даёт базовое понимание твоих Аватаров, твоей сути, чтобы ты:
+• увидел(а) себя со стороны
+• понял(а), почему в жизни всё складывается именно так
+• получил(а) первые точки опоры
+
+👉 Это не вся система, а её ключевая часть.
+Глубинные причины, прогнозы, периоды, отношения и персональный план действий разбираются на консультациях.
+——
+Если ты чувствуешь, что:
+• хочешь глубже понять себя
+• связать характер, таланты и деньги
+• получить чёткий план действий
+• разобрать конкретную ситуацию
+
+👉 у тебя есть два варианта:
+
+📋 Получить полный аватар личности (глубокий разбор всех точек + рекомендации)
+👉 https://avalik-avatar.ru
+
+📞 Записаться на личную консультацию (разбор твоей ситуации + стратегия на 3–6 месяцев)
+👉 https://avalik-avatar.ru
+
+Я рядом, чтобы помочь тебе понять себя, а не переделывать.
+`, { align: 'left' });
+
+      doc.moveDown(1);
 
       doc.fontSize(9).font(font).text('—', { align: 'center' });
       doc.text('Метод «Аватар личности». Полный разбор: avalik-avatar.ru', { align: 'center' });
