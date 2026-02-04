@@ -1,15 +1,11 @@
 /**
  * Генерация PDF-отчёта по результатам расчёта Аватаров.
- * Картинки — public/avatar/; тексты — avatarData; кириллица — шрифт public/Manrope.ttf
+ * Картинки — public/avatar/; тексты — avatarData; кириллица — шрифты public/Manrope.ttf и public/Manrope-Bold.ttf
  */
 import * as fs from 'fs'
 import * as path from 'path'
 import type { AvatarResult, Gender } from './avatarCalculator'
-import { getAvatarImageFilename } from './avatarImages'
 import {
-  TALENTS_TEXTS,
-  MONEY_TEXTS,
-  LESSONS_TEXTS,
   CHARACTER_BLOCK_INTRO,
   COMFORT_BLOCK_INTRO,
   MONEY_BLOCK_INTRO,
@@ -17,12 +13,18 @@ import {
   LESSONS_BLOCK_INTRO,
 } from './avatarData'
 
-/** Путь к шрифту для кириллицы: .env FONT_PATH или public/Manrope.ttf */
+/** Пути к шрифтам для кириллицы: .env FONT_PATH / FONT_BOLD_PATH или public/Manrope.ttf / public/Manrope-Bold.ttf */
 const FONT_PATH =
   process.env.FONT_PATH ||
   path.join(process.cwd(), 'public', 'Manrope.ttf')
 
 const FONT_NAME = 'Manrope'
+
+const BOLD_FONT_PATH =
+  process.env.FONT_BOLD_PATH ||
+  path.join(process.cwd(), 'public', 'Manrope-Bold.ttf')
+
+const BOLD_FONT_NAME = 'Manrope-Bold'
 
 type Doc = {
   addPage(): unknown
@@ -52,7 +54,13 @@ function getFont(doc: Doc): string {
 }
 
 function getFontBold(doc: Doc): string {
-  return fs.existsSync(FONT_PATH) ? FONT_NAME : 'Helvetica-Bold'
+  if (fs.existsSync(BOLD_FONT_PATH)) {
+    return BOLD_FONT_NAME
+  }
+  if (fs.existsSync(FONT_PATH)) {
+    return FONT_NAME
+  }
+  return 'Helvetica-Bold'
 }
 
 function addSection(doc: Doc, title: string, 
@@ -117,8 +125,6 @@ function addBullets(doc: Doc, items: string[], fontSize = 10) {
 }
 
 const AVATAR_IMAGE_WIDTH = 120
-/** Отступ после картинки (в строках), чтобы текст не наезжал. */
-const LINES_AFTER_IMAGE = 1
 
 /** Вставляет картинку аватара, если файл есть. Курсор смещается вниз после картинки. */
 function addAvatarImageIfExists(doc: Doc, avatarImagesDir: string, filename: string) {
@@ -175,6 +181,9 @@ export function buildAvatarPdfBuffer(input: PdfReportInput): Promise<Buffer> {
 
       if (fs.existsSync(FONT_PATH)) {
         doc.registerFont(FONT_NAME, FONT_PATH);
+      }
+      if (fs.existsSync(BOLD_FONT_PATH)) {
+        doc.registerFont(BOLD_FONT_NAME, BOLD_FONT_PATH);
       }
       const font = getFont(doc as Doc);
       const fontBold = getFontBold(doc as Doc);
