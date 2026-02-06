@@ -195,15 +195,15 @@ export function buildAvatarPdfBuffer(input: PdfReportInput): Promise<Buffer> {
       doc.fontSize(10).font(font).text(`Дата рождения: ${dateStr}`, { align: 'center' });
 
       const sections = [
-        { title: 'Характер', point: { data: result.date['A'], key: 'A', intro: CHARACTER_BLOCK_INTRO, recommendations: result.date['A'].recommendations } },
-        result.date['D'] ? { title: 'Зона комфорта', point: { data: result.date['D'], key: 'D', intro: COMFORT_BLOCK_INTRO, recommendations: result.date['D'].recommendations } } : null,
-        result.date['B'] ? { title: 'Таланты', point: { data: result.date['B'], key: 'B', intro: TALENTS_BLOCK_INTRO ?? '—', recommendations: result.date['B'].recommendations } } : null,
-        result.date['V'] ? { title: 'Деньги', point: { data: result.date['V'], key: 'V', intro: MONEY_BLOCK_INTRO ?? '—', recommendations: result.date['V'].recommendations } } : null,
-        result.date['G'] ? { title: 'Уроки в падении', point: { data: result.date['G'], key: 'G', intro: LESSONS_BLOCK_INTRO ?? '—', recommendations: result.date['G'].recommendations } } : null,
+        { title: 'Характер', titleRecommendations: 'характеру', point: { data: result.date['A'], key: 'A', intro: CHARACTER_BLOCK_INTRO, recommendations: result.date['A'].recommendations } },
+        result.date['D'] ? { title: 'Зона комфорта', titleRecommendations: 'зоне комфорта', point: { data: result.date['D'], key: 'D', intro: COMFORT_BLOCK_INTRO, recommendations: result.date['D'].recommendations } } : null,
+        result.date['B'] ? { title: 'Таланты', titleRecommendations: 'талантам', point: { data: result.date['B'], key: 'B', intro: TALENTS_BLOCK_INTRO ?? '—', recommendations: result.date['B'].recommendations } } : null,
+        result.date['V'] ? { title: 'Деньги', titleRecommendations: 'деньгам', point: { data: result.date['V'], key: 'V', intro: MONEY_BLOCK_INTRO ?? '—', recommendations: result.date['V'].recommendations } } : null,
+        result.date['G'] ? { title: 'Уроки в падении', titleRecommendations: 'урокам в падении', point: { data: result.date['G'], key: 'G', intro: LESSONS_BLOCK_INTRO ?? '—', recommendations: result.date['G'].recommendations } } : null,
       ].filter(Boolean);
 
       sections.forEach((sectionObj) => {
-        const { title, point } = sectionObj!;
+        const { title, titleRecommendations, point } = sectionObj!;
         doc.moveDown(0.8);
         const linkImg = point.data.image;
         const titleAvatar = point!.data.title;
@@ -219,7 +219,7 @@ export function buildAvatarPdfBuffer(input: PdfReportInput): Promise<Buffer> {
           ], { margin: 10 }, { avatarImagesDir, linkImg });
 
         if (point!.recommendations?.length) {
-          doc.fontSize(11).font(fontBold).text(`Рекомендации по ${title.toLowerCase()}`, { continued: false });
+          doc.fontSize(11).font(fontBold).text(`Рекомендации по ${titleRecommendations.toLowerCase()}`, { continued: false });
           doc.moveDown(0.3);
           addBullets(doc as Doc, point!.recommendations, 10);
         }

@@ -36,6 +36,7 @@ function safeJson(res: http.ServerResponse, status: number, payload: any) {
 }
 
 function startInternalApiServer() {
+  return;
   const port = Number(process.env.INTERNAL_API_PORT ?? process.env.PORT ?? 3105)
 
   const server = http.createServer(async (req, res) => {
